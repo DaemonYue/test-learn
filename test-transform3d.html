@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<title>test transform 3d</title>
+<style type="text/css">
+.container{
+	perspective: 800px;
+}
+.container .stage{
+	transform-style: preserve-3d;
+	width: 100%;
+	height: 300px;
+}
+.container img{
+	width: 208px;
+	height: 100px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+}
+img:nth-child(1) { transform: rotateY(   0deg ) translateZ(320px); }
+img:nth-child(2) { transform: rotateY(  40deg ) translateZ(320px); }
+img:nth-child(3) { transform: rotateY(  80deg ) translateZ(320px); }
+img:nth-child(4) { transform: rotateY( 120deg ) translateZ(320px); }
+img:nth-child(5) { transform: rotateY( 160deg ) translateZ(320px); }
+img:nth-child(6) { transform: rotateY( 200deg ) translateZ(320px); }
+img:nth-child(7) { transform: rotateY( 240deg ) translateZ(320px); }
+img:nth-child(8) { transform: rotateY( 280deg ) translateZ(320px); }
+img:nth-child(9) { transform: rotateY( 320deg ) translateZ(320px); }
+</style>
+</head>
+<body>
+	<div class="container" id="container" onClick="rotate()">
+		<div class="stage" id="stage">
+			<img src="./img/14291.jpg">
+			<img src="./img/140-150602104154.jpg">
+			<img src="./img/9a504fc2d56285355b48215393ef76c6a7ef631c.jpg">
+			<img src="./img/103411ixgxf0lqhp0qhr1e.jpg">
+			<img src="./img/11949825202aaf9f47o.jpg">
+			<img src="./img/421dd881b7e035601208270e5e041bcb.jpg">
+			<img src="./img/382b0fb92aaeb43fe7b09f8132888ad3.jpg">
+			<img src="./img/339aaff798222472b027bd13e8e0f413.jpg">
+			<img src="./img/20141024162133_XAWvK.png">
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+var stage = document.querySelector('#stage');
+var currDeg = 0;
+setInterval(function(){
+	currDeg = currDeg == 320 ? 0 : currDeg + 40;
+	stage.style.transform = 'rotateY('+ currDeg + 'deg)';
+}, 3000)
+</script>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+<head>
+<title>html粒子动画</title>
+<style type="text/css">
+#myCanvas{
+	margin: 50px auto;
+	background-color: #000;
+}
+</style>
+</head>
+<body>
+	<canvas id="myCanvas"></canvas>
+</body>
+<script type="text/javascript">
+(function(){
+	var canvas = document.getElementById('myCanvas');
+	canvas.width = 600;
+	canvas.height = 600;
+	var ctx = canvas.getContext("2d");
+	var image = new Image();
+	var imageData;
+	var jumpFrom = 400;
+	var curTime = 0;
+	var duration = 100;
+
+	canvas.onclick = move;
+
+	image.src = 'img/lala.png';
+
+	image.onload = function() {
+		ctx.drawImage(image, 0, 0, 167, 143, 200, 200, 167, 143);
+		imageData = ctx.getImageData(200,200,167,143);
+		// ctx.putImageData(imageData, 400,400)
+	};
+
+	var particles = [];
+	var jumpId,moveId;
+
+	setTimeout(function(){
+		cal();
+		// draw();
+		// setInterval(float, 150);
+		// move();
+		moveId = setInterval(move, 10);
+		// jumpId = setInterval(jump, 100);
+		// jump();
+	}, 1000)
+	
+
+	function cal(){
+		var data = imageData.data;
+		var len = imageData.length;
+		var cols = 167;
+		var rows = 143;
+
+		var w = 167;
+		var h = 143;
+		var s_width = parseInt(w / cols);
+		var s_height = parseInt(h / rows);
+
+		var b_width = parseInt(600 / cols);
+		var b_height = parseInt(400 /cols);
+
+		var pos = 0;
+		var par_x, par_y;
+
+		for(var i = 0 ; i <= cols ; i++){
+			for(var j = 0 ; j <= rows ; j++){
+				pos = [(j*s_height - 1) * w + (i*s_width) - 1] * 4;
+				var x1 = 300,
+					y1 = 300;
+
+				if(data[pos] > 0){
+					var par = {
+						curr_time: i/16.7 + j,
+						x: 200 + i*s_width + (Math.random() - 0.5)*20,
+						y: 200 + j*s_height + (Math.random() - 0.5)*20,
+						x1: x1,
+						y1: y1,
+						fillStyle: '#1ba5ba'
+					}
+					particles.push(par);
+				}
+			}
+		}
+	}
+
+	function draw(){
+		ctx.clearRect(0,0,600,400);
+		var len = particles.length,
+			curr_par = null;
+
+		for(var i = 0; i < len ; i++){
+			curr_par = particles[i];
+			ctx.fillStyle = curr_par.fillStyle;
+			ctx.fillRect(curr_par.x,curr_par.y,1,1);
+		}
+	}
+
+	function float(){
+		ctx.clearRect(0,0,600,600);
+		var len = particles.length,
+			curr_par = null;
+
+		for(var i = 0; i < len ; i++){
+			curr_par = particles[i];
+			ctx.fillStyle = curr_par.fillStyle;
+			ctx.fillRect(curr_par.x + (Math.random() - 0.5)*5,curr_par.y + (Math.random() - 0.5)*5,1,1);
+		}
+	}
+
+	function move() {
+		if(curTime > 50){
+			clearInterval(moveId);
+			setInterval(float, 150);
+			return
+		}else{
+			ctx.clearRect(0,0,600,600);
+			var len = particles.length,
+				curr_par = null;
+			var curr_x,curr_y;
+
+			for(var i = 0; i < len ; i++){
+				curr_par = particles[i];
+				ctx.fillStyle = curr_par.fillStyle;
+				curr_x = easeInOut(curTime, curr_par.x1, curr_par.x-curr_par.x1, 50);
+				curr_y = easeInOut(curTime, curr_par.y1, curr_par.y-curr_par.y1, 50);
+				// console.log(curr_x)
+				ctx.fillRect(curr_x,curr_y,1,1);
+			}
+			curTime++;
+		}
+		
+	}
+
+	function jump(){
+		if(curTime > duration){
+			clearInterval(jumpId);
+			return
+		}
+		ctx.clearRect(0,400,600,600);
+		var x = jumpFrom, y = 400;
+		var x1 = easeInOut(curTime, 0, 4, duration);
+
+		ctx.putImageData(imageData, x1, 400);
+		curTime ++;
+	}
+
+	function easeInOut(t, b, c, d, s){
+ 		if (s === undefined) s = 1.70158;
+        return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	}
+}())
+
+</script>
+</html>
