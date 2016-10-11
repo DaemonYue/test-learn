@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+<title>排序算法</title>
+<style type="text/css">
+pre{
+    background-color: #333;
+    text-indent: 2em;
+    color: #ccc;
+}
+.function, .window, .var, .length, .target, .value{
+    color: #66D9EF;
+}
+.fun-name{
+    color: #A6E22E;
+}
+.args{
+    color: #FD971F;
+}
+</style>
+<script src="../vendor/jquery.min.js"></script>
+</head>
+<body>
+    <h4>待排序(40)：[4,12,8,9,6,3,5,7,99,151,56,44,763,78,0,22,25,69,77,63,24,89,100,12,19,27,26,38,31,60,101,254,354,444,848,686,969,141,111,43]</h4>
+    <div id="buttons">
+        <button value="bubble">冒泡(bubble)</button>
+        <button value="betterBubble">改进冒泡(betterBubble)</button>
+        <button value="selection">选择排序(selection)</button>
+        <button value="qsort">快速排序(qsort)</button>
+    </div>
+    <ul>
+        <li>执行步数：<span id="step"></span></li>
+        <li>执行时间：<span id="time"></span></li>
+        <li>执行结果：<span id="result"></span></li>
+        <li>算法代码：<pre id="code"></pre></li>
+    </ul>
+</body>
+<script>
+(function(){
+    var styleList = ['function','window','var','length','target','value'];
+    var arr = [4,12,8,9,6,3,5,7,99,151,56,44,763,78,0,22,25,69,77,63,24,89,100,12,19,27,26,38,31,60,101,254,354,444,848,686,969,141,111,43];
+    var len = arr.length;
+
+    var stepCt = $('#step');
+    var timeCt = $('#time');
+    var resultCt = $('#result');
+    var codeCt = $('#code');
+
+    $('#buttons').on('click', chooseAlg);
+
+    window.performance.now();
+
+    function chooseAlg(e) {
+        var resultObj = {};
+
+        var newArr = [];
+        for(let k=0; k<len; k++){
+            newArr[k] = arr[k];
+        }
+
+        switch(e.target.value){
+            case 'bubble':
+                resultObj = bubble(newArr);
+                break;
+            case 'betterBubble':
+                resultObj = betterBubble(newArr);
+                break;
+            case 'selection':
+                resultObj = selection(newArr);
+                break;
+            case 'qsort':
+                resultObj = qsort(newArr);
+                break;
+            default:
+                console.log('no such ALG');
+        }
+
+
+        stepCt.html(resultObj.step);
+        timeCt.html(resultObj.time.toFixed(8) + 'ms');
+        resultCt.html('[' + resultObj.result + ']');
+        codeCt.html(styleFun(resultObj.code));
+    }
+
+    function styleFun(funString) {
+        var newString = '';
+
+        for(var i = 0; i < styleList.length; i++){
+            var reg = new RegExp(styleList[i] , 'g');
+            if(i == 0){
+                newString = funString.replace(reg, '<span class="'+ styleList[i] +'">'+ styleList[i] +'</span>')
+            }else{
+                newString = newString.replace(reg, '<span class="'+ styleList[i] +'">'+ styleList[i] +'</span>')
+            }
+        }
+        // return funString.replace(/function/g, '<span class="function">function</span>')
+        //        .replace(/window/g, '<span class="window">window</span>');
+        console.log(newString)
+        return newString;
+    }
+
+    function bubble(arr) {
+        var i,j,
+            step = 0;
+
+        var start = window.performance.now();
+        for(i = 0; i < len; i++){    //执行len-1次
+            for(j = 0; j < len - i - 1; j++){    //执行外层len-1次
+                var temp;
+                if(arr[j] > arr[j+1]){
+                    temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
+                step++;
+            }
+        }
+        var end = window.performance.now();
+
+        return {
+            step: step,
+            time: (end-start),
+            result: arr.toString(),
+            code: bubble.toString()
+        }
+    }
+    function betterBubble(arr) {
+        var start,end,
+            step = 0;
+
+        startIndex = 0;
+        endIndex = len - 1;
+
+        var start = window.performance.now();
+        while(startIndex < endIndex){
+            var temp;
+            for(j = startIndex; j < endIndex; j++){
+                if(arr[j] > arr[j+1]){
+                    temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
+                step++;
+            }
+            endIndex--;
+            for(j = endIndex; j > startIndex; j--){
+                if(arr[j-1] > arr[j]){
+                    temp = arr[j-1];
+                    arr[j-1] = arr[j];
+                    arr[j] = temp;
+                }
+                step++;
+            }
+            startIndex++;
+        }
+        var end = window.performance.now();
+
+        return {
+            step: step,
+            time: (end-start),
+            result: arr.toString(),
+            code: betterBubble.toString()
+        }
+    }
+    function selection(arr) {
+        var minIndex,temp,i,j,
+            step = 0;
+
+        var start = window.performance.now();
+        for(i = 0 ; i < len - 1; i++){
+            minIndex = i;
+            for(j = i + 1; j < len; j++){
+                if(arr[j] < arr[minIndex]){
+                    minIndex = j;
+                }
+                step++;
+            }
+            temp = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temp;
+        }
+        var end = window.performance.now();
+
+        return {
+            step: step,
+            time: (end-start),
+            result: arr.toString(),
+            code: selection.toString()
+        }
+    }
+    function qsort(arr){
+
+
+        return {
+            step: step,
+            time: (end-start),
+            result: arr.toString(),
+            code: qsort.toString()
+        }
+    }
+}())
+</script>
+</html>
