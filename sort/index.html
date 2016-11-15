@@ -3,6 +3,9 @@
 <head>
 <title>排序算法</title>
 <style type="text/css">
+body{
+    font-family: arial,helvetica,STHeitiSC-Light,"Heiti SC",droidsansfallback,dengxian,"microsoft yahei";
+}
 pre{
     background-color: #333;
     text-indent: 2em;
@@ -11,11 +14,17 @@ pre{
 .function, .window, .var, .length, .target, .value{
     color: #66D9EF;
 }
+.for, .cal, .if, .return{
+    color: #F92672;
+}
 .fun-name{
     color: #A6E22E;
 }
 .args{
     color: #FD971F;
+}
+.comment{
+    color: #999;
 }
 </style>
 <script src="../vendor/jquery.min.js"></script>
@@ -31,13 +40,14 @@ pre{
     <ul>
         <li>执行步数：<span id="step"></span></li>
         <li>执行时间：<span id="time"></span></li>
-        <li>执行结果：<span id="result"></span></li>
-        <li>算法代码：<pre id="code"></pre></li>
+        <li>执行结果：<br><span id="result"></span></li>
+        <li>算法代码：<pre data-lang="javascript"><code id="code"></code></pre></li>
     </ul>
 </body>
 <script>
 (function(){
-    var styleList = ['function','window','var','length','target','value'];
+    var styleList = ['function','window','var','length','target','value','if','return'];
+    var calList = ['+', '-', '*', '$', '='];
     var arr = [4,12,8,9,6,3,5,7,99,151,56,44,763,78,0,22,25,69,77,63,24,89,100,12,19,27,26,38,31,60,101,254,354,444,848,686,969,141,111,43];
     var len = arr.length;
 
@@ -84,6 +94,8 @@ pre{
 
     function styleFun(funString) {
         var newString = '';
+        var regFor = new RegExp('for', 'g');
+        var regComment = new RegExp('\/\/\S+', 'g');
 
         for(var i = 0; i < styleList.length; i++){
             var reg = new RegExp(styleList[i] , 'g');
@@ -93,9 +105,9 @@ pre{
                 newString = newString.replace(reg, '<span class="'+ styleList[i] +'">'+ styleList[i] +'</span>')
             }
         }
-        // return funString.replace(/function/g, '<span class="function">function</span>')
-        //        .replace(/window/g, '<span class="window">window</span>');
-        console.log(newString)
+        console.log(regComment.exec(newString))
+        newString.replace(/\/\/\S+/, function(){return '<span class="comment">'+ $& +'</span>'})
+        newString.replace(regFor, '<span class="for">for</span>(');
         return newString;
     }
 

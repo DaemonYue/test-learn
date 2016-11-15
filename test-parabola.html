@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <title>test node site</title>
+    <style type="text/css">
+        body{
+            height: 600px;
+        }
+        #move{
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: 340px;
+            left: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+        }
+        #cat{
+            position: absolute;
+            top: 500px;
+            left : 800px;
+            width: 100px;
+            height: 50px;
+            background-color: red;
+        }
+    </style>
+    <script src="./vendor/jquery.min.js"></script>
+    <script src="./vendor/tween.js"></script>
+    <script src="./parabola.js"></script>
+</head>
+<body>
+<div id="move"></div>
+<div id="cat"></div>
+</body>
+<script>
+    $('body').on('click', function(){
+        parabola($('#move')[0], $('#cat')[0]);
+    })
+</script>
+</html>
