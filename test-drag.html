@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test-drag</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        .dustbin{
+            width: 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background-color: darkred;
+            z-index: 2;
+            color: #ddd;
+            font-size: 50px;
+            -webkit-transition: width .3s;
+            transition: width .3s;
+        }
+        .left-side{
+            overflow: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 200px;
+            padding: 0 15px;
+            background: #ddd;
+            border: solid #aaa 1px;
+        }
+        .left-side img{
+            width: 170px;
+            margin: 10px 0;
+            cursor: move;
+        }
+        .main{
+            position: fixed;
+            top: 0;
+            left: 200px;
+            right: 0;
+            bottom: 0;
+            padding: 15px;
+        }
+        .stage{
+            width: 100%;
+            height: 100%;
+            border: solid 1px #ddd;
+            background-color: #eee;
+            text-align: center;
+            vertical-align: middle;
+            color: #aaa;
+        }
+        .stage img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-ct">
+        <section class="dustbin"></section>
+        <section class="left-side">
+            <img draggable="true" src="./img/14291.jpg">
+            <img draggable="true" src="./img/140-150602104154.jpg">
+            <img draggable="true" src="./img/5e808bd1acb912ac9600b3477f5803b7.jpeg">
+            <img draggable="true" src="./img/907c2f2eb9c487afed642693bea04fc7.jpg">
+            <img draggable="true" src="./img/103411ixgxf0lqhp0qhr1e.jpg">
+            <img draggable="true" src="./img/kt19_19201.jpg">
+        </section>
+        <section class="main">
+            <div class="stage">拖动图片至此区域</div>
+        </section>
+    </div>
+</body>
+<script src="/test-learn/vendor/jquery.min.js"></script>
+<script>
+$(function(){
+    var stage = $('.stage');
+    var leftbar = $('.left-side');
+    var dustbin = $('.dustbin');
+
+    var timer = [];
+
+    $('img').on({
+        'dragstart': function(){
+        },
+        'dragend': function() {
+            stage.append($(event.target).clone());
+        }
+    });
+
+    stage.on({
+        'dragenter': function(){
+            event.preventDefault();
+            for(var i = 0; i<timer.length; i++){
+                clearTimeout(timer[i]);
+            }
+
+        },
+        'dragover': function() {
+            event.preventDefault();
+        },
+        'drop': function(){
+            event.preventDefault();
+            $(this).empty();
+        }
+    });
+
+    leftbar.on({
+        'dragenter': function(){
+            event.preventDefault();
+            timer.push(setTimeout(function(){
+                dustbin.css({'width': '200px'});
+            }, 200));
+        },
+        'dragover': function() {
+            event.preventDefault();
+        },
+        'drop': function(){
+            event.preventDefault();
+
+        }
+    });
+    dustbin.on({
+        'dragenter': function(){
+            event.preventDefault();
+        },
+        'dragover': function() {
+            event.preventDefault();
+        },
+        'drop': function(){
+            event.preventDefault();
+            stage.empty();
+            setTimeout(function(){
+                dustbin.css({'width': '0'});
+            }, 200)
+        }
+    });
+})
+</script>
+</html>
