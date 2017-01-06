@@ -1,8 +1,11 @@
 <!doctype html>
 <html>
 <head>
-<title>html粒子动画</title>
+<title>html canvas粒子动画</title>
 <style type="text/css">
+body{
+	background-color: #000;
+}
 #myCanvas{
 	margin: 50px auto;
 	background-color: #000;
@@ -12,24 +15,23 @@
 <body>
 	<canvas id="myCanvas"></canvas>
 </body>
+<script src="vendor/tween.js"></script>
 <script type="text/javascript">
 (function(){
 	var config = {
-		canvas_w : 1200,
-		canvas_h : 600,
-		image_w : 1024,
-		image_h : 503,
-		draw_w : 512,
-		draw_h : 360,
-		cols : 512,
-		rows : 360,
-		begin_w : 50,
-		begin_h : 50,
-		end_w : 300,
+		canvas_w : 1200,	//画布宽
+		canvas_h : 800,
+		image_w : 479,		//原图宽
+		image_h : 728,
+		draw_w : 479,		//实际画出图片宽
+		draw_h : 364,
+		cols : 479,			//粒子纵列数
+		rows : 364,
+		end_w : 300,		//粒子画距定点left距离
 		end_h : 150,
 		curTime : 0,
-		duration : 20,
-		img_url : 'img/lala.png'
+		duration : 20,		//tween缓动过程步数
+		img_url : 'img/minion.png'
 	};
 
 	var canvas = document.getElementById('myCanvas');
@@ -44,7 +46,6 @@
 	image.onload = function() {
 		ctx.drawImage(image, 0, 0, config.image_w, config.image_h, config.end_w, config.end_h, config.draw_w, config.draw_h);
 		imageData = ctx.getImageData(config.end_w,config.end_h,config.draw_w,config.draw_h);
-		// ctx.putImageData(imageData, config.begin_w, config.begin_h)
 	};
 
 	var particles = [];
@@ -65,7 +66,6 @@
 		var s_height = parseInt(config.draw_h / config.rows);
 
 		var pos = 0;
-		var par_x, par_y;
 
 		for(var i = 1 ; i <= config.cols ; i++){
 			for(var j = 1 ; j <= config.rows ; j++){
@@ -81,7 +81,7 @@
 						x1: x1,
 						y1: y1,
 						fillStyle: 'rgba(' + data[pos] + ',' + data[pos+1] + ',' + data[pos+2] + ',' + data[pos+3] + ')'
-					}
+					};
 					particles.push(par);
 				}
 			}
@@ -89,6 +89,7 @@
 		console.timeEnd('cal')
 	}
 
+	//画粒子画
 	function draw(){
 		ctx.clearRect(0,0,config.canvas_w,config.canvas_h);
 		var len = particles.length,
@@ -101,6 +102,7 @@
 		}
 	}
 
+	//悬浮动画
 	function float(){
 		ctx.clearRect(0,0,config.canvas_w,config.canvas_h);
 		var len = particles.length,
@@ -113,6 +115,7 @@
 		}
 	}
 
+	//tween运动动画
 	function move() {
 		var curTime = config.curTime;
 		var duration = config.duration;
